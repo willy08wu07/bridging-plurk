@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,11 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', WebController::class)
-    ->name('dashboard');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::post('/plurks', [WebController::class, 'postNewPlurk']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::post('/user/login/plurk', [WebController::class, 'logIn']);
-Route::get('/user/login/plurk/auth', [WebController::class, 'authorizeByPlurk']);
-Route::get('/user/logout', [WebController::class, 'logOut']);
+require __DIR__.'/auth.php';
