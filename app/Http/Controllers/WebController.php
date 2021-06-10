@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PlurkUser;
+use App\Models\ScheduledPlurk;
 use App\Services\PlurkApiService;
+use Carbon\CarbonImmutable;
+use Carbon\FactoryImmutable;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 
@@ -25,14 +29,37 @@ class WebController extends Controller
         }
     }
 
-    public function postNewPlurk(Request $request, PlurkApiService $plurkApi)
+    public function postNewPlurk(Request $request, PlurkApiService $plurkApi, PlurkUser $plurkUser)
     {
-        $plurkApi->postNewPlurk($request->input('content'), $request->input('qualifier') ?? '');
+        $reqParams = $request->validate([
+            'qualifier' => 'nullable|string',
+            'content' => 'required|string',
+            'scheduled_date' => 'required|date_format:Y-m-d',
+            'scheduled_time' => 'required|date_format:H:i',
+        ]);
+        $scheduledDateTime = "{$reqParams['scheduled_date']} {$reqParams['scheduled_time']}";
+        $scheduledDateTime = CarbonImmutable::createFromTimeString($scheduledDateTime, 'Asia/Taipei')
+            ->setTimezone('+00:00');
+        if ($scheduledDateTime->isPast()) {
+            $plurkApi->postNewPlurk($reqParams['content'], $reqParams['qualifier'] ?? '');
+            return redirect()->route('dashboard');
+        }
+        $scheduledPlurk = new ScheduledPlurk();
+        $scheduledPlurk->qualifier = $reqParams['qualifier'] ?? '';
+        $scheduledPlurk->content = $reqParams['content'];
+        $scheduledPlurk->token = $plurkUser->getUserToken();
+        $scheduledPlurk->token_secret = $plurkUser->getUserTokenSecret();
+        $scheduledPlurk->scheduled_time = $scheduledDateTime;
+        $scheduledPlurk->save();
         return redirect()->route('dashboard');
     }
 
     public function getDashboard(PlurkApiService $plurkApi)
     {
+        $carbonFactory = new FactoryImmutable([
+            'locale' => 'zh_TW',
+            'timezone' => 'Asia/Taipei',
+        ]);
         $myInfo = $plurkApi->getMyInfo();
         $myLatestPlurk = $plurkApi->getMyPlurks(1);
         return view('dashboard', [
@@ -40,6 +67,7 @@ class WebController extends Controller
             'plurkUserId' => $myInfo['nick_name'],
             'plurkAvatarUrl' => $myInfo['avatar_medium'],
             'latestPlurk' => $myLatestPlurk,
+            'now' => $carbonFactory->now(),
         ]);
     }
 

@@ -54,6 +54,9 @@
                 </select>
                 <textarea name="content" placeholder="想說些什麼嗎？"></textarea>
             </div>
+            <label for="scheduled_date">發噗時間：</label>
+            <input type="date" id="scheduled_date" name="scheduled_date" value="{{ $now->toDateString() }}" required>
+            <input type="time" name="scheduled_time" value="{{ $now->format('H:i') }}" required>
             <button type="submit">發噗</button>
         </form>
     </div>
