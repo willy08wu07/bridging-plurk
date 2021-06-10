@@ -27,7 +27,7 @@ class WebController extends Controller
 
     public function postNewPlurk(Request $request, PlurkApiService $plurkApi)
     {
-        $plurkApi->postNewPlurk($request->input('content'), $request->input('qualifier'));
+        $plurkApi->postNewPlurk($request->input('content'), $request->input('qualifier') ?? '');
         return redirect()->route('dashboard');
     }
 
