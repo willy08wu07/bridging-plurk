@@ -9,6 +9,7 @@ use Carbon\CarbonImmutable;
 use Carbon\FactoryImmutable;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class WebController extends Controller
 {
@@ -31,6 +32,11 @@ class WebController extends Controller
 
     public function postNewPlurk(Request $request, PlurkApiService $plurkApi, IPlurkUser $plurkUser)
     {
+        // 須轉換換行字元，否則發噗後會看到多餘空格
+        $request->merge([
+            'content' => Str::replace("\r\n", "\n", $request->input('content') ?? ''),
+        ]);
+
         $reqParams = $request->validate([
             'qualifier' => 'nullable|string',
             'content' => 'required|string',
