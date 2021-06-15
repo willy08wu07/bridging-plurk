@@ -4,7 +4,11 @@
 
 利用噗浪 API 製作的發噗工具。
 
-以 PHP + Laravel 製作，目前只有基本發噗功能，以及可以觀看最新一則自己的噗。
+以 PHP + Laravel 製作，目前功能如下：
+
+* 發噗
+* 預約發噗
+* 觀看最新一則自己的噗
 
 ## 螢幕擷圖
 
@@ -41,3 +45,10 @@ sail artisan migrate
 ```
 
 等 Docker 容器啟動後再瀏覽 <http://localhost/>。
+
+若要正常執行預約發噗，請執行 `sail artisan schedule:work` 。
+
+## 已知問題
+
+Q：不能用 `crontab` 來定時執行預約發噗功能嗎？  
+A：用 `crontab` 來定時執行會出現 `the input device is not a TTY` ，目前找不到簡易的解決辦法。
