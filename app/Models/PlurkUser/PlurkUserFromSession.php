@@ -4,7 +4,7 @@ namespace App\Models\PlurkUser;
 
 use Illuminate\Http\Request;
 
-class PlurkUser implements IPlurkUser
+class PlurkUserFromSession implements IPlurkUser
 {
     private $request;
 

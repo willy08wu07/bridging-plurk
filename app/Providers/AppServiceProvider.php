@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Models\PlurkUser\IPlurkUser;
-use App\Models\PlurkUser\PlurkUser;
+use App\Models\PlurkUser\PlurkUserFromSession;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(IPlurkUser::class, function (Application $app) {
-            return $app->make(PlurkUser::class);
+            return $app->make(PlurkUserFromSession::class);
         });
     }
 
