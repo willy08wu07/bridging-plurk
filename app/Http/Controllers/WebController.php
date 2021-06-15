@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PlurkUser;
+use App\Models\PlurkUser\IPlurkUser;
 use App\Models\ScheduledPlurk;
 use App\Services\PlurkApiService;
 use Carbon\CarbonImmutable;
@@ -29,7 +29,7 @@ class WebController extends Controller
         }
     }
 
-    public function postNewPlurk(Request $request, PlurkApiService $plurkApi, PlurkUser $plurkUser)
+    public function postNewPlurk(Request $request, PlurkApiService $plurkApi, IPlurkUser $plurkUser)
     {
         $reqParams = $request->validate([
             'qualifier' => 'nullable|string',
