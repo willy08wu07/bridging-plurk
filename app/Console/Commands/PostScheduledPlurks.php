@@ -44,7 +44,7 @@ class PostScheduledPlurks extends Command
     public function handle()
     {
         /** @var Collection<int, ScheduledPlurk> */
-        $plurks = ScheduledPlurk::where('scheduled_time', '<', now())->get();
+        $plurks = ScheduledPlurk::where('scheduled_time', '<=', now())->get();
         foreach ($plurks as $plurk) {
             /** @var PlurkApiService */
             $plurkApi = App::makeWith(PlurkApiService::class, [
