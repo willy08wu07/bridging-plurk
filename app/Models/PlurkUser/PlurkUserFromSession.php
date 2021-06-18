@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\PlurkUser;
 
 use Illuminate\Http\Request;
 
-class PlurkUser
+class PlurkUserFromSession implements IPlurkUser
 {
     private $request;
 

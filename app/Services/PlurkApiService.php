@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\PlurkUser;
+use App\Models\PlurkUser\IPlurkUser;
 use Qlurk\ApiClient;
 use Qlurk\Oauth;
 
@@ -12,7 +12,7 @@ class PlurkApiService
     private $consumerKey;
     private $consumerSecret;
 
-    public function __construct(PlurkUser $plurkUser)
+    public function __construct(IPlurkUser $plurkUser)
     {
         $this->plurkUser = $plurkUser;
         $this->consumerKey = env('PLURK_CONSUMER_KEY');
