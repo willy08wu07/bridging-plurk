@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Auth\PlurkAuthenticationController;
 use App\Models\PlurkUser\IPlurkUser;
 use App\Models\ScheduledPlurk;
 use App\Services\PlurkApiService;
@@ -9,6 +10,7 @@ use Carbon\CarbonImmutable;
 use Carbon\FactoryImmutable;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class WebController extends Controller
@@ -16,7 +18,9 @@ class WebController extends Controller
     public function __invoke(PlurkApiService $plurkApi)
     {
         if ( ! $plurkApi->isAuthorized()) {
-            return view('plurk-login');
+            /** @var PlurkAuthenticationController $plurkAuthController */
+            $plurkAuthController = App::make(PlurkAuthenticationController::class);
+            return $plurkAuthController->__invoke();
         }
 
         try {
@@ -26,7 +30,9 @@ class WebController extends Controller
                 throw $e;
             }
             // 401 UNAUTHORIZED
-            return $this->logOut($plurkApi);
+            /** @var PlurkAuthenticationController $plurkAuthController */
+            $plurkAuthController = App::make(PlurkAuthenticationController::class);
+            return $plurkAuthController->destroy($plurkApi);
         }
     }
 
@@ -75,23 +81,5 @@ class WebController extends Controller
             'latestPlurk' => $myLatestPlurk,
             'now' => $carbonFactory->now(),
         ]);
-    }
-
-    public function logIn(PlurkApiService $plurkApi)
-    {
-        $loginUrl = $plurkApi->logIn();
-        return redirect()->away($loginUrl);
-    }
-
-    public function authorizeByPlurk(Request $request, PlurkApiService $plurkApi)
-    {
-        $plurkApi->savePermanentUserToken($request['oauth_verifier']);
-        return redirect()->route('dashboard');
-    }
-
-    public function logOut(PlurkApiService $plurkApi)
-    {
-        $plurkApi->logOut();
-        return redirect()->route('dashboard');
     }
 }

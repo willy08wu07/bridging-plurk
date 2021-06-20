@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\PlurkAuthenticationController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,6 @@ Route::get('/', WebController::class)
 
 Route::post('/plurks', [WebController::class, 'postNewPlurk']);
 
-Route::post('/user/login/plurk', [WebController::class, 'logIn']);
-Route::get('/user/login/plurk/auth', [WebController::class, 'authorizeByPlurk']);
-Route::get('/user/logout', [WebController::class, 'logOut']);
+Route::post('/user/login/plurk', [PlurkAuthenticationController::class, 'redirectToPlurkOAuth']);
+Route::get('/user/login/plurk/auth', [PlurkAuthenticationController::class, 'store']);
+Route::get('/user/logout', [PlurkAuthenticationController::class, 'destroy']);
