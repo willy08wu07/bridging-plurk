@@ -20,6 +20,8 @@ Route::get('/', WebController::class)
 
 Route::post('/plurks', [WebController::class, 'postNewPlurk']);
 
+Route::get('/user/login/plurk', PlurkAuthenticationController::class)
+    ->name('login');
 Route::post('/user/login/plurk', [PlurkAuthenticationController::class, 'redirectToPlurkOAuth']);
 Route::get('/user/login/plurk/auth', [PlurkAuthenticationController::class, 'store']);
 Route::get('/user/logout', [PlurkAuthenticationController::class, 'destroy']);

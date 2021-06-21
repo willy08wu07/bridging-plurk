@@ -28,6 +28,6 @@ class PlurkAuthenticationController extends Controller
     public function destroy(PlurkApiService $plurkApi)
     {
         $plurkApi->logOut();
-        return redirect()->route('dashboard');
+        return redirect()->route('login');
     }
 }

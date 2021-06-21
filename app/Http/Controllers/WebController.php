@@ -17,12 +17,6 @@ class WebController extends Controller
 {
     public function __invoke(PlurkApiService $plurkApi)
     {
-        if ( ! $plurkApi->isAuthorized()) {
-            /** @var PlurkAuthenticationController $plurkAuthController */
-            $plurkAuthController = App::make(PlurkAuthenticationController::class);
-            return $plurkAuthController->__invoke();
-        }
-
         try {
             return $this->getDashboard($plurkApi);
         } catch (ClientException $e) {
