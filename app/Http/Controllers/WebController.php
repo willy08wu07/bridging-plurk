@@ -67,6 +67,7 @@ class WebController extends Controller
             'timezone' => 'Asia/Taipei',
         ]);
         $myInfo = $plurkApi->getMyInfo();
+        // return $myInfo['nick_name'];
         $myLatestPlurk = $plurkApi->getMyPlurks(1);
         return view('dashboard', [
             'plurkDisplayName' => $myInfo['display_name'],
